@@ -1,5 +1,4 @@
-# auto_flow_project
-A flexible backend workflow coordination tool designed to automate repetitive development tasks, data processing sequences, and API integrations.
+
 # auto_flow_project
 
 An automated workflow engine and pipeline coordination framework built to streamline complex tasks, optimize data processes, and orchestrate seamless automation.
