@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoFlow - P2P Car Rental Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: rgba(20, 22, 30, 0.7);
+            --primary: #d4af37; /* Metallic Gold */
+            --primary-hover: #f3e5ab;
+            --text-main: #f0f2f5;
+            --text-muted: #8a8f98;
+            --border-color: rgba(212, 175, 55, 0.15);
+            --glow-color: rgba(212, 175, 55, 0.1);
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 5% 15%, rgba(214, 175, 55, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 95% 85%, rgba(25, 27, 38, 0.5) 0%, transparent 50%);
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* NAVIGATION */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(11, 12, 16, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-tag {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--primary) 0%, #b8860b 100%);
+            color: #0b0c10;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.15);
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary) 100%);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* HERO */
+        .hero {
+            padding: 80px 8%;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* STANDALONE CALCULATOR & BOOKING SECTION */
+        .calculator-booking-section {
+            padding: 40px 8%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        @media (max-width: 500px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .calc-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 35px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .calc-card h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(11, 12, 16, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .calc-results {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+        }
+
+        .calc-row.total {
+            border-top: 1px solid rgba(255,255,255,0.12);
+            padding-top: 10px;
+            margin-top: 5px;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.15rem;
+        }
+
+        /* SEARCH & FILTER BAR */
+        .filter-section {
+            padding: 0 8% 40px;
+        }
+
+        .filter-bar {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-group input, .filter-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(11, 12, 16, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--glow-color);
+        }
+
+        /* CAR GRID */
+        .catalog-section {
+            padding: 0 8% 60px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+            box-shadow: 0 0 8px var(--primary);
+        }
+
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .car-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 15px 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .car-img-wrapper {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            background: #191b26;
+            overflow: hidden;
+        }
+
+        .car-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .car-card:hover .car-img {
+            transform: scale(1.05);
+        }
+
+        .car-emoji {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(11, 12, 16, 0.7);
+            padding: 8px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            line-height: 1;
+            backdrop-filter: blur(5px);
+        }
+
+        .car-content {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-brand {
+            font-size: 0.9rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .car-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .car-specs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .car-footer {
+            margin-top: auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 18px;
+        }
+
+        .car-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .car-price span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        /* MODAL FOR LISTING CAR */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-card {
+            background: #14161e;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 550px;
+            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--text-main);
+        }
+
+        .modal-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .modal-row .form-group {
+            flex: 1;
+        }
+
+        @media (max-width: 620px) {
+            .modal-row {
+                flex-direction: column;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">
+        <img src="/static/images/logo.png" alt="AutoFlow Logo" style="height: 35px; width: auto; border-radius: 6px;">
+        Auto<span>Flow</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="#calculator-section">Rent Calculator</a></li>
+        <li><a href="#booking-section">Book a Ride</a></li>
+        <li><a href="#catalog">Explore Fleet</a></li>
+        <li id="adminLink" style="display: none;"><a href="/admin">Admin Dashboard</a></li>
+    </ul>
+    <div class="user-menu" id="userMenu">
+        <!-- Will be filled by JavaScript -->
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>Peer-to-Peer Car Rentals Made Seamless</h1>
+    <p>Find the perfect ride, estimate your trip cost using our real-time calculator, and confirm reservations instantly. Powered by SQLite.</p>
+    <div class="hero-actions" style="display: flex; justify-content: center; gap: 15px;">
+        <a href="#calculator-section" class="btn-action">Rent Calculator</a>
+        <button type="button" class="btn-action" onclick="openListCarModal()">List a Car</button>
+        <a href="#catalog" class="btn-secondary">Explore Fleet</a>
+    </div>
+</div>
+
+<!-- STANDALONE CALCULATOR & RESERVATION SECTION -->
+<div class="calculator-booking-section" id="calculator-section">
+    <div class="calc-grid">
+        <!-- RENT CALCULATOR -->
+        <div class="calc-card">
+            <h3>🧮 Rent Calculator</h3>
+            <form id="calculatorForm" onsubmit="calculatePriceAPI(event)">
+                <div class="form-group">
+                    <label for="calcCar">Select Vehicle</label>
+                    <select id="calcCar" onchange="syncCarToBooking()" required>
+                        <option value="">-- Choose a Vehicle --</option>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="calcStartDate">Start Date</label>
+                        <input type="date" id="calcStartDate" onchange="syncDatesToBooking()" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="calcEndDate">End Date</label>
+                        <input type="date" id="calcEndDate" onchange="syncDatesToBooking()" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="calcInsurance">Insurance Package</label>
+                    <select id="calcInsurance" onchange="syncInsuranceToBooking()" required>
+                        <!-- Loaded dynamically -->
+                    </select>
+                </div>
+                <button type="submit" class="btn-secondary" style="width: 100%; border-color: var(--primary); color: var(--primary);">Calculate Rental Price</button>
+            </form>
+
+            <div class="calc-results" id="calcResults">
+                <div class="calc-row">
+                    <span>Base Rental Rate</span>
+                    <span id="resDailyRate">PKR 0</span>
+                </div>
+                <div class="calc-row">
+                    <span>Total Duration</span>
+                    <span id="resDays">0 days</span>
+                </div>
+                <div class="calc-row">
+                    <span>Standard Rental Cost</span>
+                    <span id="resBaseCost">PKR 0</span>
+                </div>
+                <div class="calc-row">
+                    <span>Multi-Day Discount</span>
+                    <span id="resDiscount" style="color: var(--success);">PKR 0</span>
+                </div>
+                <div class="calc-row">
+                    <span>Insurance Coverage</span>
+                    <span id="resInsurance">PKR 0</span>
+                </div>
+                <div class="calc-row total">
+                    <span>Estimated Total</span>
+                    <span id="resTotal">PKR 0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKING FORM -->
+        <div class="calc-card" id="booking-section">
+            <h3>📝 Book Your Ride</h3>
+            <form id="bookingForm" onsubmit="submitBookingAPI(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookCar">Selected Vehicle</label>
+                        <select id="bookCar" required>
+                            <option value="">-- Select a Car --</option>
+                            <!-- Synced with calculator -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bookStartDate">Start Date</label>
+                        <input type="date" id="bookStartDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bookEndDate">End Date</label>
+                        <input type="date" id="bookEndDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="bookInsurance">Insurance Coverage</label>
+                    <select id="bookInsurance" required>
+                        <!-- Synced with calculator -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="bookRequests">Special Requests / Notes</label>
+                    <textarea id="bookRequests" rows="2" placeholder="e.g. child seat, airport pickup request..."></textarea>
+                </div>
+                <button type="submit" class="btn-action" style="width: 100%;">Confirm Booking Reservation</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-section" id="catalog">
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label for="searchBrand">Search Model/Brand</label>
+            <input type="text" id="searchBrand" placeholder="e.g. Honda, Tesla..." oninput="filterCars()">
+        </div>
+        <div class="filter-group">
+            <label for="filterType">Car Type</label>
+            <select id="filterType" onchange="filterCars()">
+                <option value="All">All Types</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV</option>
+                <option value="Electric">Electric</option>
+                <option value="Luxury">Luxury</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filterFuel">Fuel Type</label>
+            <select id="filterFuel" onchange="filterCars()">
+                <option value="All">All Fuel Types</option>
+                <option value="Petrol">Petrol</option>
+                <option value="Diesel">Diesel</option>
+                <option value="Electric">Electric</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- CATALOG SECTION -->
+<div class="catalog-section">
+    <div class="section-header">
+        <h2 class="section-title">Available Vehicles</h2>
+        <button type="button" class="btn-secondary" onclick="openListCarModal()">List a Car</button>
+    </div>
+    <div class="car-grid" id="carGrid">
+        <!-- Loaded dynamically -->
+    </div>
+</div>
+
+<div class="modal" id="listCarModal">
+    <div class="modal-card">
+        <button class="close-btn" type="button" onclick="closeModal('listCarModal')" aria-label="Close">&times;</button>
+        <h3 class="modal-title">List Your Car</h3>
+
+        <form id="listCarForm" onsubmit="submitCarListingAPI(event)">
+            <div class="modal-row">
+                <div class="form-group">
+                    <label for="carBrand">Brand</label>
+                    <input type="text" id="carBrand" placeholder="e.g. Honda" required>
+                </div>
+                <div class="form-group">
+                    <label for="carModel">Model</label>
+                    <input type="text" id="carModel" placeholder="e.g. Civic" required>
+                </div>
+            </div>
+
+            <div class="modal-row">
+                <div class="form-group">
+                    <label for="carType">Car Type</label>
+                    <select id="carType" required>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Electric">Electric</option>
+                        <option value="Luxury">Luxury</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="carFuel">Fuel Type</label>
+                    <select id="carFuel" required>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="modal-row">
+                <div class="form-group">
+                    <label for="carYear">Year</label>
+                    <input type="number" id="carYear" placeholder="2024" min="1990" max="2027" required>
+                </div>
+                <div class="form-group">
+                    <label for="carRate">Daily Rate (PKR)</label>
+                    <input type="number" id="carRate" placeholder="5000" min="1" required>
+                </div>
+            </div>
+
+            <div class="modal-row">
+                <div class="form-group">
+                    <label for="carSeats">Seats</label>
+                    <input type="number" id="carSeats" value="5" min="2" max="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="carTrans">Transmission</label>
+                    <select id="carTrans">
+                        <option value="Automatic">Automatic</option>
+                        <option value="Manual">Manual</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:15px;">
+                <label for="carLocation">Pickup Location</label>
+                <input type="text" id="carLocation" placeholder="e.g. Johar Town, Lahore" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom:15px;">
+                <label for="carDesc">Description</label>
+                <textarea id="carDesc" rows="3" placeholder="Condition, features, pickup notes..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom:20px;">
+                <label for="carImageFile">Car Photo</label>
+                <input type="file" id="carImageFile" accept="image/*" style="padding: 10px; background: rgba(11, 12, 16, 0.4); border: 1px dashed rgba(255,255,255,0.2);">
+            </div>
+
+            <button type="submit" class="btn-action" style="width:100%;" id="submitListingBtn">Submit Car Listing</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let allCars = [];
+    let allInsurances = [];
+    let currentUser = null;
+
+    // Cookie helpers
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return '';
+    }
+
+    function deleteCookie(name) {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    }
+
+    // Fallback UI mapping for SQLite database items which do not have front-end image resources
+    function getCarAssets(brand) {
+        const lowerBrand = brand.toLowerCase();
+        if (lowerBrand.includes('tesla')) {
+            return {
+                img: 'https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&w=900&q=80',
+                emoji: '⚡'
+            };
+        } else if (lowerBrand.includes('toyota') || lowerBrand.includes('fortuner')) {
+            return {
+                img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
+                emoji: '🚙'
+            };
+        } else {
+            return {
+                img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=900&q=80',
+                emoji: '🚘'
+            };
+        }
+    }
+
+    // Auth state check
+    const role = getCookie('role');
+    const username = getCookie('username');
+    if (localStorage.getItem('user')) {
+        currentUser = JSON.parse(localStorage.getItem('user'));
+    }
+
+    function updateNavUI() {
+        const userMenu = document.getElementById('userMenu');
+        const adminLink = document.getElementById('adminLink');
+
+        if (role === 'admin') {
+            adminLink.style.display = 'block';
+        }
+
+        if (username) {
+            userMenu.innerHTML = `
+                <div class="user-tag">${username} (${role.toUpperCase()})</div>
+                <button class="btn-secondary" onclick="openListCarModal()">List a Car</button>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            `;
+        } else {
+            userMenu.innerHTML = `
+                <a href="/login" class="btn-secondary">Sign In</a>
+                <a href="/login" class="btn-action">Register</a>
+            `;
+        }
+    }
+
+    function openListCarModal() {
+        if (!currentUser) {
+            alert('Please sign in before listing your car.');
+            window.location.href = '/login';
+            return;
+        }
+
+        document.getElementById('listCarModal').style.display = 'flex';
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+
+    function logout() {
+        deleteCookie('username');
+        deleteCookie('role');
+        localStorage.removeItem('user');
+        window.location.href = '/logout';
+    }
+
+    // Load dynamic elements from SQLite APIs
+    async function initPageData() {
+        try {
+            // 1. Fetch Cars
+            const carsRes = await fetch('/api/cars');
+            const carsData = await carsRes.json();
+            allCars = carsData.cars || [];
+            renderCars(allCars);
+            populateCarDropdowns(allCars);
+
+            // 2. Fetch Insurance Options
+            const insRes = await fetch('/api/insurance');
+            const insData = await insRes.json();
+            allInsurances = insData.insurances || [];
+            populateInsuranceDropdowns(allInsurances);
+
+        } catch (error) {
+            console.error('Initialization error', error);
+        }
+    }
+
+    function renderCars(cars) {
+        const grid = document.getElementById('carGrid');
+        if (!cars || cars.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">No vehicles match your criteria.</div>`;
+            return;
+        }
+
+        grid.innerHTML = cars.map(car => {
+            const assets = getCarAssets(car.brand);
+            const displayImg = car.image_url || assets.img;
+            return `
+                <div class="car-card">
+                    <div class="car-img-wrapper">
+                        <img src="${displayImg}" class="car-img" alt="${car.brand} ${car.model_name}">
+                        <span class="car-emoji">${assets.emoji}</span>
+                    </div>
+                    <div class="car-content">
+                        <span class="car-brand">${car.brand}</span>
+                        <h3 class="car-name">${car.brand} ${car.model_name}</h3>
+                        <div class="car-specs">
+                            <div class="spec-item">⚡ ${car.fuel_type}</div>
+                            <div class="spec-item">🚗 ${car.car_type}</div>
+                            <div class="spec-item">📅 ${car.year}</div>
+                            <div class="spec-item">⚙️ ${car.transmission}</div>
+                            <div class="spec-item">👥 ${car.seats} Seats</div>
+                        </div>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4;">${car.description || 'No description provided.'}</p>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:15px;">📍 ${car.location}</div>
+                        <div class="car-footer">
+                            <div class="car-price">PKR ${car.daily_rate}<span>/day</span></div>
+                            <button class="btn-action" onclick="scrollToCalculator(${car.id})">Book Ride</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function populateCarDropdowns(cars) {
+        const calcCar = document.getElementById('calcCar');
+        const bookCar = document.getElementById('bookCar');
+
+        const optionsHtml = cars.map(c => `<option value="${c.id}">${c.brand} ${c.model_name} (PKR ${c.daily_rate}/day)</option>`).join('');
+        
+        calcCar.innerHTML = '<option value="">-- Choose a Vehicle --</option>' + optionsHtml;
+        bookCar.innerHTML = '<option value="">-- Select a Car --</option>' + optionsHtml;
+    }
+
+    function populateInsuranceDropdowns(insurances) {
+        const calcIns = document.getElementById('calcInsurance');
+        const bookIns = document.getElementById('bookInsurance');
+
+        const optionsHtml = insurances.map(i => `<option value="${i.name}">${i.name} (+PKR ${i.daily_cost}/day)</option>`).join('');
+
+        calcIns.innerHTML = optionsHtml;
+        bookIns.innerHTML = optionsHtml;
+    }
+
+    function filterCars() {
+        const searchVal = document.getElementById('searchBrand').value.toLowerCase();
+        const typeVal = document.getElementById('filterType').value;
+        const fuelVal = document.getElementById('filterFuel').value;
+
+        const filtered = allCars.filter(car => {
+            const matchesSearch = car.brand.toLowerCase().includes(searchVal) || car.model_name.toLowerCase().includes(searchVal);
+            const matchesType = typeVal === 'All' || car.car_type === typeVal;
+            const matchesFuel = fuelVal === 'All' || car.fuel_type === fuelVal;
+            return matchesSearch && matchesType && matchesFuel;
+        });
+
+        renderCars(filtered);
+    }
+
+    // Sync helpers to bind Rent Calculator values to the Booking Form
+    function syncCarToBooking() {
+        document.getElementById('bookCar').value = document.getElementById('calcCar').value;
+    }
+
+    function syncDatesToBooking() {
+        document.getElementById('bookStartDate').value = document.getElementById('calcStartDate').value;
+        document.getElementById('bookEndDate').value = document.getElementById('calcEndDate').value;
+    }
+
+    function syncInsuranceToBooking() {
+        document.getElementById('bookInsurance').value = document.getElementById('calcInsurance').value;
+    }
+
+    function scrollToCalculator(carId) {
+        document.getElementById('calcCar').value = carId;
+        syncCarToBooking();
+        document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Interactive Rent Price Calculator calling the SQLite endpoint
+    async function calculatePriceAPI(event) {
+        event.preventDefault();
+        
+        const carId = document.getElementById('calcCar').value;
+        const start = document.getElementById('calcStartDate').value;
+        const end = document.getElementById('calcEndDate').value;
+        const insType = document.getElementById('calcInsurance').value;
+
+        if (!carId || !start || !end) {
+            alert('Please fill out the vehicle choice and dates first.');
+            return;
+        }
+
+        const car = allCars.find(c => c.id == carId);
+
+        try {
+            // Call SQLite price calculator API
+            const response = await fetch('/api/calculator/price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    car_id: parseInt(carId),
+                    start_date: start,
+                    end_date: end,
+                    insurance_type: insType
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Populate results breakdown
+                document.getElementById('resDailyRate').textContent = `PKR ${car.daily_rate}`;
+                
+                const days = Math.ceil((new Date(end) - new Date(start)) / (1000 * 60 * 60 * 24));
+                document.getElementById('resDays').textContent = `${days} days`;
+                document.getElementById('resBaseCost').textContent = `PKR ${data.rental_cost}`;
+                document.getElementById('resDiscount').textContent = `PKR ${data.discount}`;
+                document.getElementById('resInsurance').textContent = `PKR ${data.insurance_cost}`;
+                document.getElementById('resTotal').textContent = `PKR ${data.total}`;
+                
+                document.getElementById('calcResults').style.display = 'flex';
+            } else {
+                alert(data.error || 'Failed to calculate price.');
+            }
+        } catch (error) {
+            alert('Failed to connect to price calculation API.');
+        }
+    }
+
+    // Submit booking through SQLite `/api/bookings`
+    async function submitBookingAPI(event) {
+        event.preventDefault();
+
+        if (!currentUser) {
+            alert('Please sign in to place a reservation.');
+            window.location.href = '/login';
+            return;
+        }
+
+        const carId = document.getElementById('bookCar').value;
+        const start = document.getElementById('bookStartDate').value;
+        const end = document.getElementById('bookEndDate').value;
+        const insType = document.getElementById('bookInsurance').value;
+        const requests = document.getElementById('bookRequests').value;
+
+        if (!carId || !start || !end) {
+            alert('Please fill out all booking reservation fields.');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/bookings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    customer_id: currentUser.id,
+                    car_id: parseInt(carId),
+                    start_date: start,
+                    end_date: end,
+                    insurance_type: insType,
+                    special_requests: requests
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(`Reservation placed successfully! Booking ID: #${data.booking.id}`);
+                document.getElementById('bookingForm').reset();
+                document.getElementById('calculatorForm').reset();
+                document.getElementById('calcResults').style.display = 'none';
+            } else {
+                alert(data.error || 'Reservation failed.');
+            }
+        } catch (error) {
+            alert('Failed to submit booking reservation.');
+        }
+    }
+
+    async function submitCarListingAPI(event) {
+        event.preventDefault();
+
+        if (!currentUser) {
+            alert('Please sign in before listing your car.');
+            window.location.href = '/login';
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitListingBtn');
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
+
+        let uploadedImageUrl = '';
+        const imageFileField = document.getElementById('carImageFile');
+
+        if (imageFileField.files && imageFileField.files[0]) {
+            const fileData = new FormData();
+            fileData.append('file', imageFileField.files[0]);
+
+            try {
+                const uploadResponse = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: fileData
+                });
+
+                if (uploadResponse.ok) {
+                    const uploadResult = await uploadResponse.json();
+                    uploadedImageUrl = uploadResult.image_url;
+                } else {
+                    const uploadErr = await uploadResponse.json();
+                    alert(uploadErr.error || 'Photo upload failed.');
+                    submitBtn.textContent = 'Submit Car Listing';
+                    submitBtn.disabled = false;
+                    return;
+                }
+            } catch (error) {
+                alert('Photo upload failed. Please try again.');
+                submitBtn.textContent = 'Submit Car Listing';
+                submitBtn.disabled = false;
+                return;
+            }
+        }
+
+        const payload = {
+            owner_id: currentUser.id,
+            brand: document.getElementById('carBrand').value.trim(),
+            model_name: document.getElementById('carModel').value.trim(),
+            car_type: document.getElementById('carType').value,
+            fuel_type: document.getElementById('carFuel').value,
+            year: parseInt(document.getElementById('carYear').value, 10),
+            daily_rate: parseFloat(document.getElementById('carRate').value),
+            seats: parseInt(document.getElementById('carSeats').value, 10),
+            transmission: document.getElementById('carTrans').value,
+            location: document.getElementById('carLocation').value.trim(),
+            description: document.getElementById('carDesc').value.trim(),
+            color: 'Silver',
+            image_url: uploadedImageUrl
+        };
+
+        try {
+            const response = await fetch('/api/cars', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert('Your car has been listed successfully.');
+                closeModal('listCarModal');
+                document.getElementById('listCarForm').reset();
+                await initPageData();
+                document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert(data.error || 'Car listing failed.');
+            }
+        } catch (error) {
+            alert('Unable to submit your car listing.');
+        } finally {
+            submitBtn.textContent = 'Submit Car Listing';
+            submitBtn.disabled = false;
+        }
+    }
+
+    // Init
+    updateNavUI();
+    initPageData();
+</script>
+
+</body>
+</html>
