@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoFlow - Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0c10;
+            --card-bg: rgba(20, 22, 30, 0.7);
+            --primary: #d4af37; /* Metallic Gold */
+            --primary-hover: #f3e5ab;
+            --text-main: #f0f2f5;
+            --text-muted: #8a8f98;
+            --border-color: rgba(212, 175, 55, 0.15);
+            --glow-color: rgba(212, 175, 55, 0.1);
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 5% 15%, rgba(214, 175, 55, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 95% 85%, rgba(25, 27, 38, 0.5) 0%, transparent 50%);
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            padding-bottom: 60px;
+        }
+
+        /* NAVIGATION */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            background: rgba(11, 12, 16, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        /* MAIN CONTENT */
+        .admin-container {
+            padding: 40px 8%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .welcome-header {
+            margin-bottom: 40px;
+        }
+
+        .welcome-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 30%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-header p {
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        /* STATS GRID */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+
+        .stat-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        /* DATA SECTIONS */
+        .dashboard-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .data-section {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* PENDING CARS LIST */
+        .pending-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .pending-item {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .pending-item:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .car-details {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .car-avatar {
+            font-size: 2rem;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--border-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .car-info h4 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .car-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .owner-badge {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            color: var(--text-main);
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            border: none;
+            color: #0b0c10;
+            padding: 10px 22px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-approve:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+        }
+
+        /* TABLE FOR BOOKINGS */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 16px;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .status-confirmed {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <a href="/" class="logo">
+        <img src="/static/images/logo.png" alt="AutoFlow Logo" style="height: 35px; width: auto; border-radius: 6px;">
+        Auto<span>Flow</span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a href="/admin" style="color: var(--primary);">Dashboard</a></li>
+    </ul>
+    <div>
+        <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+</nav>
+
+<div class="admin-container">
+    <div class="welcome-header">
+        <h1>Control Panel</h1>
+        <p>Manage fleet status, approve listings, and view active inquiries.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-title">Active Fleet Size</div>
+            <div class="stat-value" id="statCars">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-title">Pending Approvals</div>
+            <div class="stat-value" id="statPending">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-title">Total Bookings</div>
+            <div class="stat-value" id="statBookings">0</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-title">Registered Users</div>
+            <div class="stat-value" id="statUsers">0</div>
+        </div>
+    </div>
+
+    <div class="dashboard-row">
+        <!-- PENDING APPROVALS -->
+        <div class="data-section">
+            <h3 class="section-title">
+                Pending Listings
+            </h3>
+            <div class="pending-list" id="pendingList">
+                <!-- Dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- RECENT BOOKINGS -->
+        <div class="data-section" style="margin-top: 30px;">
+            <h3 class="section-title">Active Bookings</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Car</th>
+                            <th>Customer</th>
+                            <th>Dates</th>
+                            <th>Insurance</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTable">
+                        <!-- Dynamically loaded -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get current user role from API
+    async function checkAdminAccess() {
+        try {
+            const response = await fetch('/api/current-user');
+            const data = await response.json();
+            if (data.role !== 'admin') {
+                alert('Access denied. Administrators only.');
+                window.location.href = '/login';
+            }
+        } catch (error) {
+            alert('Error checking admin access.');
+            window.location.href = '/login';
+        }
+    }
+
+    checkAdminAccess();
+
+    function logout() {
+        window.location.href = '/logout';
+    }
+
+    async function loadDashboard() {
+        try {
+            // Fetch stats
+            const statsRes = await fetch('/api/stats/dashboard');
+            const stats = await statsRes.json();
+
+            // Fetch users, cars, bookings
+            const usersRes = await fetch('/api/users');
+            const usersData = await usersRes.json();
+            const users = usersData.users || [];
+
+            const carsRes = await fetch('/api/cars');
+            const carsData = await carsRes.json();
+            const cars = carsData.cars || [];
+
+            const bookingsRes = await fetch('/api/bookings');
+            const bookingsData = await bookingsRes.json();
+            const bookings = bookingsData.bookings || [];
+
+            // Populate stats
+            document.getElementById('statCars').textContent = stats.available_cars || 0;
+            document.getElementById('statPending').textContent = (stats.total_cars - stats.available_cars) || 0;
+            document.getElementById('statBookings').textContent = stats.total_bookings || 0;
+            document.getElementById('statUsers').textContent = stats.total_users || 0;
+
+            // Populate bookings table
+            const bookingsTable = document.getElementById('bookingsTable');
+            if (bookings.length === 0) {
+                bookingsTable.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No booking logs available.</td></tr>`;
+            } else {
+                bookingsTable.innerHTML = bookings.map(b => {
+                    const car = cars.find(c => c.id === b.car_id);
+                    const user = users.find(u => u.id === b.customer_id);
+                    const carTitle = car ? `${car.brand} ${car.model_name}` : `Car #${b.car_id}`;
+                    const customerName = user ? user.full_name : `User #${b.customer_id}`;
+                    const customerEmail = user ? user.email : 'N/A';
+                    const customerPhone = user ? user.phone : 'N/A';
+                    
+                    return `
+                        <tr>
+                            <td>#${b.id}</td>
+                            <td><strong>${carTitle}</strong></td>
+                            <td>
+                                <div><strong>${customerName}</strong></div>
+                                <div style="font-size:0.8rem; color:var(--text-muted);">${customerEmail} | ${customerPhone}</div>
+                            </td>
+                            <td>
+                                <div>Start: ${new Date(b.start_date).toLocaleDateString()}</div>
+                                <div>End: ${new Date(b.end_date).toLocaleDateString()}</div>
+                            </td>
+                            <td>${b.insurance_type} (PKR ${b.insurance_cost})</td>
+                            <td>
+                                <span class="status-badge ${b.status === 'confirmed' ? 'status-confirmed' : 'status-pending'}">${b.status}</span>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            // Populate Pending listings list (cars with is_available = false)
+            const pendingList = document.getElementById('pendingList');
+            const pendingCars = cars.filter(c => !c.is_available);
+
+            if (pendingCars.length === 0) {
+                pendingList.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No pending listings needing approval.</div>`;
+            } else {
+                pendingList.innerHTML = pendingCars.map(car => {
+                    const owner = users.find(u => u.id === car.owner_id);
+                    const ownerName = owner ? owner.full_name : `Dealer #${car.owner_id}`;
+                    const ownerPhone = owner ? owner.phone : 'N/A';
+                    return `
+                        <div class="pending-item">
+                            <div class="car-details">
+                                <div class="car-avatar">🚘</div>
+                                <div class="car-info">
+                                    <h4>${car.brand} ${car.model_name} (${car.year})</h4>
+                                    <p>Type: <strong>${car.car_type}</strong> | Fuel: <strong>${car.fuel_type}</strong> | Rate: <strong>PKR ${car.daily_rate}/day</strong></p>
+                                    <p style="margin-top: 5px;">📍 ${car.location}</p>
+                                    <p style="font-size:0.8rem; margin-top:5px; color:var(--primary);">Seller: ${ownerName} (${ownerPhone})</p>
+                                </div>
+                            </div>
+                            <button class="btn-approve" onclick="approveCar(${car.id})">Approve & Make Live</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+        } catch (error) {
+            console.error('Failed to load admin stats', error);
+        }
+    }
+
+    async function approveCar(carId) {
+        try {
+            // Update car status to is_available=true using PUT /api/cars/<id>
+            const response = await fetch(`/api/cars/${carId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ is_available: true })
+            });
+
+            if (response.ok) {
+                alert('Vehicle approved successfully!');
+                loadDashboard();
+            } else {
+                const data = await response.json();
+                alert(data.error || 'Failed to approve vehicle.');
+            }
+        } catch (error) {
+            alert('Error connecting to API.');
+        }
+    }
+
+    // Init
+    loadDashboard();
+</script>
+
+</body>
+</html>
